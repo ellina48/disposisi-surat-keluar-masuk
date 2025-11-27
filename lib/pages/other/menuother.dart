@@ -1,137 +1,174 @@
 import 'package:flutter/material.dart';
 
-class KepsekMenu extends StatefulWidget {
-  const KepsekMenu({super.key});
+class DashboardPage extends StatefulWidget {
+  const DashboardPage({super.key});
 
   @override
-  State<KepsekMenu> createState() => _KepsekMenuState();
+  State<DashboardPage> createState() => _DashboardPageState();
 }
 
-class _KepsekMenuState extends State<KepsekMenu> {
+class _DashboardPageState extends State<DashboardPage> {
   String selectedFilter = "semua";
-  int selectedIndex = 0; // untuk navbar
-
-  final List<Map<String, dynamic>> suratList = [
-    {"tanggal": "Senin, 12 Oktober 2025", "jenis": "Surat Keluar"},
-    {"tanggal": "Senin, 12 Oktober 2025", "jenis": "Surat Masuk"},
-    {"tanggal": "Selasa, 13 Oktober 2025", "jenis": "Surat Masuk"},
-  ];
 
   @override
   Widget build(BuildContext context) {
-    List filteredSurat = selectedFilter == "semua"
-        ? suratList
-        : suratList.where((s) => s["jenis"] == selectedFilter).toList();
-
     return Scaffold(
       backgroundColor: Colors.white,
+
+      // ===== BODY =====
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // HEADER
+              // ===== HEADER =====
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("assets/images/logosmk.jpg", width: 45),
-                  const Icon(Icons.notifications_none, size: 32),
+                  Image.asset("assets/images/logosmk.jpg", height: 32),
+                  Icon(
+                    Icons.notifications_none,
+                    size: 32,
+                    color: Colors.grey.shade500,
+                  ),
                 ],
               ),
 
-              const SizedBox(height: 8),
-              const Text(
-                "Disposisi Surat Masuk\nSurat Keluar",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 20),
-
-              // SEARCH BAR
-              Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
-                  border: Border.all(color: Colors.grey.shade400),
-                ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Cari surat...",
-                    prefixIcon: Icon(Icons.search),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                  ),
-                ),
-              ),
               const SizedBox(height: 14),
 
-              // FILTER BAR
+              // ===== TITLE =====
+              const Text(
+                "Disposisi Surat Masuk\nSurat Keluar",
+                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              ),
+
+              const SizedBox(height: 14),
+
+              // ===== SEARCH BAR =====
+              Container(
+                height: 38,
+                padding: const EdgeInsets.symmetric(horizontal: 12),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(30),
+                  border: Border.all(color: Colors.black87),
+                ),
+                child: const Row(
+                  children: [
+                    Icon(Icons.search, size: 18),
+                    SizedBox(width: 6),
+                    Expanded(
+                      child: TextField(
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          hintText: "",
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 14),
+
+              // ===== FILTER BUTTONS =====
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  filterButton("semua", Colors.grey.shade600),
-                  filterButton("Surat Masuk", const Color(0xFF1A88D0)),
-                  filterButton("Surat Keluar", const Color(0xFF4C4B4B)),
+                  filterChip("semua"),
+                  filterChip("disetujui"),
+                  filterChip("menunggu"),
+                  filterChip("ditolak"),
                 ],
               ),
-              const SizedBox(height: 25),
 
-              // LIST OF CARDS
-              for (var surat in filteredSurat)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: suratCard(
-                    tanggal: surat["tanggal"],
-                    jenis: surat["jenis"],
-                  ),
-                ),
+              const SizedBox(height: 18),
+
+              // ===== CARD SURAT KELUAR =====
+              suratCard(
+                title: "Surat Keluar",
+                date: "Senin, 12 Oktober 2025",
+                icon: "assets/surat_keluar.png",
+                info: ["Kode", "No Surat", "Asal"],
+              ),
+
+              const SizedBox(height: 18),
+
+              // ===== CARD SURAT MASUK =====
+              suratCard(
+                title: "Surat Masuk",
+                date: "Senin, 12 Oktober 2025",
+                icon: "assets/surat_masuk.png",
+                info: ["No Surat", "Asal", "Perihal", "Tgl Diterima"],
+              ),
+
+              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
 
-      // BOTTOM NAVBAR (3 menu)
-      bottomNavigationBar: BottomNavigationBar(
-        currentIndex: selectedIndex,
-        onTap: (index) => setState(() => selectedIndex = index),
-        selectedItemColor: const Color(0xFF187D94),
-        unselectedItemColor: Colors.grey,
-        showSelectedLabels: true,
-        showUnselectedLabels: true,
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home, size: 28),
-            label: "Home",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.history, size: 28),
-            label: "History",
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person, size: 28),
-            label: "Profile",
-          ),
-        ],
+      // ===== FLOATING ADD BUTTON =====
+      floatingActionButton: Container(
+        height: 64,
+        width: 64,
+        decoration: BoxDecoration(
+          color: const Color(0xFF2BA6B7),
+          shape: BoxShape.circle,
+          boxShadow: [
+            BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.2)),
+          ],
+        ),
+        child: const Icon(Icons.add, color: Colors.white, size: 34),
+      ),
+
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+
+      // ===== CURVED BOTTOM NAV =====
+      bottomNavigationBar: Container(
+        height: 78,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: const BorderRadius.vertical(top: Radius.circular(38)),
+          boxShadow: [
+            BoxShadow(
+              blurRadius: 10,
+              color: Colors.black.withOpacity(0.12),
+              offset: const Offset(0, -2),
+            ),
+          ],
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            navIcon(Icons.home, true),
+            navIcon(Icons.group_outlined, false),
+            const SizedBox(width: 40), // space for FAB
+            navIcon(Icons.insert_drive_file_outlined, false),
+            navIcon(Icons.more_horiz, false),
+          ],
+        ),
       ),
     );
   }
 
-  // BUTTON FILTER
-  Widget filterButton(String title, Color color) {
-    bool isSelected = selectedFilter == title;
+  // ===== FILTER CHIP WIDGET =====
+  Widget filterChip(String label) {
+    bool active = selectedFilter == label;
 
     return GestureDetector(
-      onTap: () => setState(() => selectedFilter = title),
+      onTap: () => setState(() => selectedFilter = label),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
         decoration: BoxDecoration(
-          color: isSelected ? color : color.withOpacity(0.17),
-          borderRadius: BorderRadius.circular(14),
+          color: active ? Colors.grey.shade800 : Colors.grey.shade200,
+          borderRadius: BorderRadius.circular(8),
         ),
         child: Text(
-          title,
+          label,
           style: TextStyle(
-            fontSize: 12,
-            color: isSelected ? Colors.white : color,
+            fontSize: 11,
+            color: active ? Colors.white : Colors.black87,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -139,69 +176,107 @@ class _KepsekMenuState extends State<KepsekMenu> {
     );
   }
 
-  // CARD SURAT
-  Widget suratCard({required String tanggal, required String jenis}) {
+  // ===== SURAT CARD =====
+  Widget suratCard({
+    required String title,
+    required String date,
+    required String icon,
+    required List<String> info,
+  }) {
     return Container(
-      padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.grey.shade300),
-        boxShadow: [
-          BoxShadow(
-            blurRadius: 6,
-            spreadRadius: 1,
-            offset: const Offset(0, 2),
-            color: Colors.black.withOpacity(0.08),
-          ),
-        ],
+        borderRadius: BorderRadius.circular(14),
+        border: Border.all(color: Colors.black87, width: 1),
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              tanggal,
-              style: const TextStyle(fontWeight: FontWeight.w600),
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Title + Icon + Date
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  children: [
+                    CircleAvatar(
+                      radius: 22,
+                      backgroundColor: const Color(0xFFD3ECF4),
+                      child: Image.asset(icon, height: 26),
+                    ),
+                    const SizedBox(width: 10),
+                    Text(
+                      title,
+                      style: const TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+                Text(date, style: const TextStyle(fontSize: 11)),
+              ],
             ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            jenis,
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-          ),
-          const SizedBox(height: 12),
 
-          // 👇 Kondisi isi berdasarkan jenis surat
-          if (jenis == "Surat Keluar") ...[
-            const Text("Kode", style: TextStyle(color: Colors.black54)),
-            const Text("No Surat", style: TextStyle(color: Colors.black54)),
-            const Text("Asal", style: TextStyle(color: Colors.black54)),
-          ] else ...[
-            const Text("No Surat", style: TextStyle(color: Colors.black54)),
-            const Text("Asal", style: TextStyle(color: Colors.black54)),
-            const Text("Perihal", style: TextStyle(color: Colors.black54)),
-            const Text("Tgl Diterima", style: TextStyle(color: Colors.black54)),
-          ],
+            const SizedBox(height: 10),
 
-          const SizedBox(height: 16),
+            // Details Box
+            Container(
+              width: double.infinity,
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(8),
+                border: Border.all(color: Colors.black87),
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: info
+                    .map(
+                      (e) => Padding(
+                        padding: const EdgeInsets.only(bottom: 3),
+                        child: Text(e, style: const TextStyle(fontSize: 12)),
+                      ),
+                    )
+                    .toList(),
+              ),
+            ),
 
-          Align(
-            alignment: Alignment.centerRight,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF1AA7D0),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            const SizedBox(height: 10),
+
+            // Button
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 18,
+                  vertical: 6,
+                ),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF4EB5D6),
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: const Text(
+                  "Selengkapnya",
+                  style: TextStyle(
+                    fontSize: 12,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                  ),
                 ),
               ),
-              onPressed: () {},
-              child: const Text("Selengkapnya"),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+    );
+  }
+
+  // ===== NAV ICON =====
+  Widget navIcon(IconData icon, bool active) {
+    return Icon(
+      icon,
+      size: 30,
+      color: active ? const Color(0xFF2BA6B7) : Colors.grey,
     );
   }
 }

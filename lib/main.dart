@@ -23,18 +23,18 @@ class MyApp extends StatelessWidget {
       title: "Simdis",
       theme: ThemeData(primarySwatch: Colors.blue, useMaterial3: true),
 
-      // Halaman pertama
-      home: const TUHomePage(),
+      // Halaman pertama → Splash
+      home: const SplashScreen(),
 
-      //routes: {
-      //'splash': (_) => const SplashScreen(),
-      //'/welcome': (_) => const WelcomePage(),
-      //'/signin': (_) => const SignIn(),
-      //'/signup': (_) => const SignUp(),
-      //'/menu_tu': (_) => const TUHomePage(),
-      //'/menu_kepsek': (_) => const KepsekMenu(),
-      //'/menu_other': (_) => const MenuOther(),
-      //},
+      // Opsional: aktifkan routes jika diperlukan
+      routes: {
+        '/home': (_) => const WelcomePage(),
+        '/signin': (_) => const SignIn(),
+        '/signup': (_) => const SignUp(),
+        '/menu_tu': (_) => const TUHomePage(),
+        '/menu_kepsek': (_) => const KepsekMenu(),
+        '/menu_other': (_) => const DashboardPage(),
+      },
     );
   }
 }

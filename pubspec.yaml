@@ -68,6 +68,12 @@ flutter:
     - assets/images/rasi.png
     - assets/images/logo.png
     - assets/images/logosmk.jpg
+    - assets/icons/ic_inmail.png
+    - assets/icons/ic_outmail.png
+    - assets/icons/ic_home.png
+    - assets/icons/ic_history.png
+    - assets/icons/ic_profile.png
+    
     
 
   # An image asset can refer to one or more resolution-specific "variants", see

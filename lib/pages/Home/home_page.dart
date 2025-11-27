@@ -24,8 +24,8 @@ class WelcomePage extends StatelessWidget {
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Color(0xFFE3F2FD),  // biru muda
-              Color(0xFF90CAF9),  // biru medium
+              Color(0xFFE3F2FD), // biru muda
+              Color(0xFF90CAF9), // biru medium
             ],
           ),
         ),
@@ -73,7 +73,7 @@ class WelcomePage extends StatelessWidget {
                 alignment: Alignment.center,
                 children: [
                   Positioned(
-                    right: 5,
+                    right: 0,
                     bottom: 0,
                     child: Image.asset(
                       'assets/images/rasi.png',
@@ -81,7 +81,7 @@ class WelcomePage extends StatelessWidget {
                     ),
                   ),
                   Positioned(
-                    left: 5,
+                    left: 0,
                     bottom: 0,
                     child: Image.asset(
                       'assets/images/ino.png',
@@ -131,10 +131,7 @@ class WelcomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF64B5F6),
-                              Color(0xFF1E88E5)
-                            ],
+                            colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
                           ),
                         ),
                         child: Center(
@@ -166,10 +163,7 @@ class WelcomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(14),
                           gradient: const LinearGradient(
-                            colors: [
-                              Color(0xFF64B5F6),
-                              Color(0xFF1E88E5)
-                            ],
+                            colors: [Color(0xFF64B5F6), Color(0xFF1E88E5)],
                           ),
                         ),
                         child: Center(

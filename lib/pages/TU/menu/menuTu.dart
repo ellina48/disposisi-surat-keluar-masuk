@@ -9,263 +9,361 @@ class TUHomePage extends StatefulWidget {
 
 class _TUHomePageState extends State<TUHomePage> {
   String selectedFilter = "semua";
+  int selectedIndex = 0;
 
-  final List<Map<String, dynamic>> suratList = [
+  final List<Map<String, String>> suratList = [
     {
       "tanggal": "Senin, 12 Oktober 2025",
       "jenis": "Surat Keluar",
       "status": "disetujui",
-      "statusColor": Color(0xFF6CA26F),
     },
     {
       "tanggal": "Senin, 12 Oktober 2025",
       "jenis": "Surat Masuk",
       "status": "ditolak",
-      "statusColor": Color(0xFFC75454),
     },
     {
       "tanggal": "Selasa, 13 Oktober 2025",
       "jenis": "Surat Masuk",
-      "status": "proses",
-      "statusColor": Color(0xFF4C4B4B),
+      "status": "menunggu",
     },
   ];
 
   @override
   Widget build(BuildContext context) {
-    List filteredSurat = selectedFilter == "semua"
+    final size = MediaQuery.of(context).size;
+    List<Map<String, String>> filtered = selectedFilter == "semua"
         ? suratList
-        : suratList.where((s) => s["status"] == selectedFilter).toList();
+        : suratList.where((e) => e["status"] == selectedFilter).toList();
 
     return Scaffold(
+      extendBody: true,
       backgroundColor: Colors.white,
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Logo + Notification
+              const SizedBox(height: 8),
+              // HEADER
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("assets/images/logosmk.jpg", width: 45),
-                  const Icon(Icons.notifications_none, size: 32),
+                  Image.asset(
+                    'assets/images/logosmk.jpg',
+                    width: size.width * 0.12,
+                  ),
+                  const Icon(
+                    Icons.notifications_none,
+                    size: 26,
+                    color: Colors.black,
+                  ),
                 ],
               ),
               const SizedBox(height: 8),
-
-              const Text(
+              Text(
                 "Disposisi Surat Masuk\nSurat Keluar",
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: size.width * 0.07,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-              const SizedBox(height: 20),
-
-              // search bar
+              const SizedBox(height: 12),
+              // SEARCH BAR
               Container(
+                height: 44,
                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(40),
+                  borderRadius: BorderRadius.circular(30),
                   border: Border.all(color: Colors.grey.shade400),
                 ),
-                child: const TextField(
-                  decoration: InputDecoration(
-                    hintText: "Cari surat...",
-                    prefixIcon: Icon(Icons.search),
-                    border: InputBorder.none,
-                    contentPadding: EdgeInsets.symmetric(vertical: 14),
-                  ),
+                child: Row(
+                  children: [
+                    const SizedBox(width: 12),
+                    const Icon(Icons.search),
+                    const SizedBox(width: 10),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: TextField(
+                          textAlignVertical: TextAlignVertical.center,
+                          decoration: const InputDecoration(
+                            hintText: "Cari surat...",
+                            border: InputBorder.none,
+                            isDense: true,
+                            contentPadding: EdgeInsets.zero,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(height: 14),
-
-              // filter
+              const SizedBox(height: 12),
+              // FILTER
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  filterButton("semua", Colors.grey.shade500),
-                  filterButton("disetujui", const Color(0xFF6CA26F)),
-                  filterButton("proses", const Color(0xFF4C4B4B)),
-                  filterButton("ditolak", const Color(0xFFC75454)),
+                  filterChip("semua"),
+                  const SizedBox(width: 8),
+                  filterChip("disetujui"),
+                  const SizedBox(width: 8),
+                  filterChip("menunggu"),
+                  const SizedBox(width: 8),
+                  filterChip("ditolak"),
                 ],
               ),
-              const SizedBox(height: 25),
-
-              // LIST CARD
-              for (var surat in filteredSurat)
-                Padding(
-                  padding: const EdgeInsets.only(bottom: 15),
-                  child: suratCard(
-                    tanggal: surat["tanggal"],
-                    jenis: surat["jenis"],
-                    statusLabel: surat["status"],
-                    statusColor: surat["statusColor"],
-                  ),
+              const SizedBox(height: 18),
+              // LIST CARD SURAT
+              Expanded(
+                child: ListView.builder(
+                  physics: const BouncingScrollPhysics(),
+                  itemCount: filtered.length,
+                  itemBuilder: (context, index) {
+                    return suratCard(
+                      jenis: filtered[index]["jenis"]!,
+                      tanggal: filtered[index]["tanggal"]!,
+                      status: filtered[index]["status"]!,
+                    );
+                  },
                 ),
+              ),
             ],
           ),
         ),
       ),
-
-      // bottom nav
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.only(top: 6),
-        decoration: BoxDecoration(
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(22),
-            topRight: Radius.circular(22),
-          ),
-          border: Border.all(color: Colors.grey.shade300),
-        ),
-        child: BottomAppBar(
-          shape: const CircularNotchedRectangle(),
-          notchMargin: 8,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: const [
-              Icon(Icons.home, size: 30, color: Color(0xFF187D94)),
-              Icon(Icons.mail, size: 30, color: Color(0xFFB3B3B3)),
-              SizedBox(width: 35),
-              Icon(Icons.folder, size: 30, color: Color(0xFFB3B3B3)),
-              Icon(Icons.person, size: 30, color: Color(0xFFB3B3B3)),
-            ],
-          ),
-        ),
-      ),
-
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: const Color(0xFF187D94),
-        shape: const CircleBorder(), // << bikin makin bulet
-        onPressed: () {},
-        child: const Icon(
-          Icons.add,
-          size: 30,
-        ), // size jangan terlalu besar biar gak kepenuhan
-      ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: bottomNavBar(),
     );
   }
 
-  // BUTTON FILTER
-  Widget filterButton(String title, Color color) {
-    bool isSelected = selectedFilter == title;
-
+  Widget filterChip(String text) {
+    bool active = text == selectedFilter;
     return GestureDetector(
-      onTap: () => setState(() => selectedFilter = title),
+      onTap: () => setState(() => selectedFilter = text),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+        padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
         decoration: BoxDecoration(
-          color: isSelected ? color : color.withOpacity(0.20),
-          borderRadius: BorderRadius.circular(18),
+          borderRadius: BorderRadius.circular(13),
+          color: active ? const Color(0xFF4D635B) : Colors.white,
+          border: Border.all(color: const Color(0xFF4D635B)),
         ),
         child: Text(
-          title,
+          text,
           style: TextStyle(
-            color: isSelected ? Colors.white : color,
-            fontWeight: FontWeight.w600,
+            color: active ? Colors.white : const Color(0xFF4D635B),
+            fontWeight: FontWeight.bold,
           ),
         ),
       ),
     );
   }
 
-  // CARD
   Widget suratCard({
-    required String tanggal,
     required String jenis,
-    required String statusLabel,
-    required Color statusColor,
+    required String tanggal,
+    required String status,
   }) {
+    Color statusColor = status == "disetujui"
+        ? const Color(0xFFB8DBC0)
+        : status == "ditolak"
+        ? const Color(0xFFE7B3B7)
+        : const Color(0xFFE7DCA0);
+
+    IconData icon = jenis == "Surat Masuk" ? Icons.inbox : Icons.send;
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      margin: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(12), // << radius DIKURANGI
+        borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade300),
+        color: Colors.white,
         boxShadow: [
           BoxShadow(
-            blurRadius: 6,
-            spreadRadius: 1,
-            offset: Offset(0, 2),
-            color: Colors.black.withOpacity(0.08),
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              tanggal,
-              style: const TextStyle(fontWeight: FontWeight.w600),
-            ),
-          ),
-          const SizedBox(height: 4),
+          // TITLE + ICON + STATUS
           Row(
             children: [
-              Text(
-                jenis,
-                style: const TextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
+              Icon(icon, size: 42, color: statusColor),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      jenis,
+                      style: const TextStyle(
+                        fontSize: 17,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 8,
+                        vertical: 3,
+                      ),
+                      decoration: BoxDecoration(
+                        color: statusColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(status, style: const TextStyle(fontSize: 11)),
+                    ),
+                  ],
                 ),
               ),
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 4,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10), // badge lebih tipis
-                  color: statusColor,
-                ),
-                child: Text(
-                  statusLabel,
-                  style: const TextStyle(color: Colors.white, fontSize: 12),
-                ),
-              ),
+              Text(tanggal, style: const TextStyle(fontSize: 12)),
             ],
           ),
-          const SizedBox(height: 12),
-          const Text("No Surat", style: TextStyle(color: Colors.black54)),
-          const Text("Asal", style: TextStyle(color: Colors.black54)),
-          const Text("Perihal", style: TextStyle(color: Colors.black54)),
-          const Text("Tgl Diterima", style: TextStyle(color: Colors.black54)),
-          const SizedBox(height: 14),
+          const SizedBox(height: 16),
+          // DETAIL SURAT + BUTTONS
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1AA7D0),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(
-                      10,
-                    ), // tombol menyamakan radius
-                  ),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: jenis == "Surat Masuk"
+                      ? [
+                          detailRow("No Surat"),
+                          detailRow("Asal"),
+                          detailRow("Perihal"),
+                          detailRow("Tgl Diterima"),
+                        ]
+                      : [
+                          detailRow("Kode"),
+                          detailRow("No Surat"),
+                          detailRow("Asal"),
+                        ],
                 ),
-                onPressed: () {},
-                child: const Text("Hapus"),
               ),
-              Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(
-                    10,
-                  ), // tombol arrow radius lebih kecil
-                  color: const Color(0xFF1AA7D0),
-                ),
-                child: const Icon(
-                  Icons.arrow_forward_ios,
-                  color: Colors.white,
-                  size: 18,
-                ),
+              Column(
+                children: [
+                  SizedBox(
+                    height: 32,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: const Color(0xFF1AA7D0),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: const Text(
+                        "Hapus",
+                        style: TextStyle(fontSize: 12),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  const CircleAvatar(
+                    radius: 16,
+                    backgroundColor: Color(0xFF1AA7D0),
+                    child: Icon(
+                      Icons.arrow_forward_ios,
+                      size: 15,
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
               ),
             ],
           ),
         ],
+      ),
+    );
+  }
+
+  Widget detailRow(String t) => Padding(
+    padding: const EdgeInsets.only(bottom: 4),
+    child: Text(t, style: const TextStyle(fontSize: 13)),
+  );
+
+  // NAVBAR BERSIH + TOMBOL + MELAYANG
+  Widget bottomNavBar() {
+    return SizedBox(
+      height: 110,
+      child: Stack(
+        clipBehavior: Clip.none,
+        children: [
+          // --- BACKGROUND PILL ---
+          Positioned(
+            bottom: 15,
+            left: 30,
+            right: 30,
+            child: Container(
+              height: 70,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(50),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.15),
+                    blurRadius: 15,
+                    offset: const Offset(0, 6),
+                  ),
+                ],
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  navIcon(Icons.home, 0),
+                  navIcon(Icons.person_outline, 1),
+
+                  const SizedBox(width: 55), // ruang tombol +
+
+                  navIcon(Icons.calendar_month_outlined, 3),
+                  navIcon(Icons.person, 4),
+                ],
+              ),
+            ),
+          ),
+
+          // --- TOMBOL + BULAT MENGAMBANG ---
+          Positioned(
+            top: -5,
+            left: 0,
+            right: 0,
+            child: Center(
+              child: GestureDetector(
+                onTap: () {},
+                child: Container(
+                  height: 70,
+                  width: 70,
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF1AA7D0),
+                    shape: BoxShape.circle,
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.2),
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: const Icon(Icons.add, size: 38, color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget navIcon(IconData icon, int index) {
+    bool active = selectedIndex == index;
+    return GestureDetector(
+      onTap: () => setState(() => selectedIndex = index),
+      child: Icon(
+        icon,
+        size: 26,
+        color: active ? const Color(0xFF1AA7D0) : Colors.grey,
       ),
     );
   }
