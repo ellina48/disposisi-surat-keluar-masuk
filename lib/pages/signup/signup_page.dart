@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:ta_mobile_disposisi_surat/pages/Home/home_page.dart';
 import '../signin/signin_page.dart'; // import halaman SignIn
-  // import halaman Home
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -15,13 +14,14 @@ class SignUp extends StatefulWidget {
 class _SignUpPageState extends State<SignUp> {
   bool _obscurePass = true;
   bool _obscureConfirmPass = true;
+  String? selectedRole; // untuk menyimpan dropdown
 
   @override
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(
       SystemUiOverlayStyle(
-        statusBarColor: Colors.blue.shade300,
+        statusBarColor: Color(0xFFE3F2FD),
         statusBarIconBrightness: Brightness.light,
       ),
     );
@@ -35,12 +35,11 @@ class _SignUpPageState extends State<SignUp> {
 
     return WillPopScope(
       onWillPop: () async {
-        // Navigasi saat back ditekan, langsung ke Home
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (_) => const WelcomePage()),
         );
-        return false; // mencegah kembali ke halaman sebelumnya
+        return false;
       },
       child: Scaffold(
         body: SizedBox(
@@ -75,9 +74,7 @@ class _SignUpPageState extends State<SignUp> {
                         child: Container(
                           margin: EdgeInsets.symmetric(horizontal: width * 0.06),
                           padding: EdgeInsets.symmetric(
-                            vertical: height * 0.02,
-                            horizontal: width * 0.06,
-                          ),
+                              vertical: height * 0.02, horizontal: width * 0.06),
                           decoration: BoxDecoration(
                             color: Colors.white.withOpacity(0.15),
                             borderRadius: BorderRadius.circular(25),
@@ -106,18 +103,24 @@ class _SignUpPageState extends State<SignUp> {
                               ),
                               SizedBox(height: height * 0.02),
                               _buildTextField(
-                                  label: "Nama", icon: Icons.person_outline, width: width),
+                                label: "Nama",
+                                icon: Icons.person_outline,
+                                width: width,
+                              ),
                               SizedBox(height: height * 0.02),
                               _buildTextField(
-                                  label: "Email",
-                                  icon: Icons.email_outlined,
-                                  keyboardType: TextInputType.emailAddress,
-                                  width: width),
+                                label: "Email",
+                                icon: Icons.email_outlined,
+                                keyboardType: TextInputType.emailAddress,
+                                width: width,
+                              ),
                               SizedBox(height: height * 0.02),
                               _buildPasswordField(
                                 label: "Kata Sandi",
                                 obscure: _obscurePass,
-                                onTap: () => setState(() => _obscurePass = !_obscurePass),
+                                onTap: () => setState(
+                                  () => _obscurePass = !_obscurePass,
+                                ),
                                 width: width,
                               ),
                               SizedBox(height: height * 0.02),
@@ -125,7 +128,8 @@ class _SignUpPageState extends State<SignUp> {
                                 label: "Ulangi kata sandi",
                                 obscure: _obscureConfirmPass,
                                 onTap: () => setState(
-                                    () => _obscureConfirmPass = !_obscureConfirmPass),
+                                  () => _obscureConfirmPass = !_obscureConfirmPass,
+                                ),
                                 width: width,
                               ),
                               SizedBox(height: height * 0.02),
@@ -141,7 +145,10 @@ class _SignUpPageState extends State<SignUp> {
                                       borderRadius: BorderRadius.circular(12),
                                     ),
                                   ),
-                                  onPressed: () {},
+                                  onPressed: () {
+                                    // nanti di sini bisa kirim data ke backend
+                                    print("Role terpilih: $selectedRole");
+                                  },
                                   child: Text(
                                     "Daftar",
                                     style: TextStyle(
@@ -162,11 +169,11 @@ class _SignUpPageState extends State<SignUp> {
                                   ),
                                   GestureDetector(
                                     onTap: () {
-                                      // Navigasi ke halaman SignIn
                                       Navigator.pushReplacement(
                                         context,
                                         MaterialPageRoute(
-                                            builder: (_) => const SignIn()),
+                                          builder: (_) => const SignIn(),
+                                        ),
                                       );
                                     },
                                     child: Text(
@@ -238,7 +245,11 @@ class _SignUpPageState extends State<SignUp> {
       decoration: InputDecoration(
         prefixIcon: Icon(Icons.lock_outline, color: Colors.black, size: width * 0.06),
         suffixIcon: IconButton(
-          icon: Icon(obscure ? Icons.visibility_off : Icons.visibility, color: Colors.black, size: width * 0.06),
+          icon: Icon(
+            obscure ? Icons.visibility_off : Icons.visibility,
+            color: Colors.black,
+            size: width * 0.06,
+          ),
           onPressed: onTap,
         ),
         labelText: label,
@@ -276,10 +287,23 @@ class _SignUpPageState extends State<SignUp> {
       items: const [
         DropdownMenuItem(value: "Tata Usaha", child: Text("Tata Usaha")),
         DropdownMenuItem(value: "Kepala Sekolah", child: Text("Kepala Sekolah")),
-        DropdownMenuItem(value: "Lainnya", child: Text("Lainnya")),
+        DropdownMenuItem(value: "Waka Kurikulum", child: Text("Waka Kurikulum")),
+        DropdownMenuItem(value: "Waka Kesiswaan", child: Text("Waka Kesiswaan")),
+        DropdownMenuItem(value: "Waka Humas", child: Text("Waka Humas")),
+        DropdownMenuItem(value: "Waka Sarpras", child: Text("Waka Sarpras")),
+        DropdownMenuItem(value: "Ketua Konsli", child: Text("Ketua Konsli")),
+        DropdownMenuItem(value: "BK", child: Text("BK")),
+        DropdownMenuItem(value: "BKK", child: Text("BKK")),
+        DropdownMenuItem(value: "Koordinator Prakerin", child: Text("Koordinator Prakerin")),
+        DropdownMenuItem(value: "Kepala Perpustakaan", child: Text("Kepala Perpustakaan")),
       ],
       hint: Text("Jabatan", style: TextStyle(fontSize: width * 0.038)),
-      onChanged: (value) {},
+      value: selectedRole,
+      onChanged: (value) {
+        setState(() {
+          selectedRole = value;
+        });
+      },
     );
   }
 }

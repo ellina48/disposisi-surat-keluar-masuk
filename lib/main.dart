@@ -5,9 +5,11 @@ import 'pages/splashsc/splash_screen.dart';
 import 'pages/Home/home_page.dart';
 import 'pages/signin/signin_page.dart';
 import 'pages/signup/signup_page.dart';
-import 'pages/TU/menu/menuTu.dart';
+import 'pages/TU/menuTU.dart';
 import 'pages/kepsek/menuukepsek.dart';
 import 'pages/other/menuother.dart';
+import 'pages/profile/profile.dart';
+import 'pages/other/notifotth.dart';
 
 void main() {
   runApp(const MyApp());
@@ -25,16 +27,6 @@ class MyApp extends StatelessWidget {
 
       // Halaman pertama → Splash
       home: const SplashScreen(),
-
-      // Opsional: aktifkan routes jika diperlukan
-      routes: {
-        '/home': (_) => const WelcomePage(),
-        '/signin': (_) => const SignIn(),
-        '/signup': (_) => const SignUp(),
-        '/menu_tu': (_) => const TUHomePage(),
-        '/menu_kepsek': (_) => const KepsekMenu(),
-        '/menu_other': (_) => const DashboardPage(),
-      },
     );
   }
 }

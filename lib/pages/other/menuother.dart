@@ -1,67 +1,109 @@
 import 'package:flutter/material.dart';
+import 'notifotth.dart';
+import '../profile/profile.dart';
 
-class DashboardPage extends StatefulWidget {
-  const DashboardPage({super.key});
+class MenuOther extends StatefulWidget {
+  const MenuOther({super.key});
 
   @override
-  State<DashboardPage> createState() => _DashboardPageState();
+  State<MenuOther> createState() => _MenuOtherState();
 }
 
-class _DashboardPageState extends State<DashboardPage> {
-  String selectedFilter = "semua";
+class _MenuOtherState extends State<MenuOther> {
+  int selectedIndex = 0;
+
+  final List<Map<String, dynamic>> suratMasukList = [
+    {
+      "tanggal": "Senin, 12 Oktober 2025",
+      "no": "SM-214",
+      "asal": "Dinas Pendidikan",
+      "perihal": "Undangan Rapat Koordinasi",
+      "tanggalDiterima": "10 Oktober 2025",
+      "diteruskan": "Wakil Kepala Sekolah",
+    },
+    {
+      "tanggal": "Selasa, 13 Oktober 2025",
+      "no": "SM-295",
+      "asal": "Kemdikbud",
+      "perihal": "Sosialisasi Kurikulum Baru",
+      "tanggalDiterima": "11 Oktober 2025",
+      "diteruskan": "Kepala TU",
+    },
+  ];
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Scaffold(
       backgroundColor: Colors.white,
 
-      // ===== BODY =====
       body: SafeArea(
-        child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 18),
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: size.width * 0.05,
+            vertical: size.height * 0.015,
+          ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // ===== HEADER =====
+              /// HEADER LOGO + NOTIF
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Image.asset("assets/images/logosmk.jpg", height: 32),
-                  Icon(
-                    Icons.notifications_none,
-                    size: 32,
-                    color: Colors.grey.shade500,
+                  Image.asset(
+                    "assets/images/logosmk.jpg",
+                    width: size.width * 0.12,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.notifications_none, size: 30),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const NotifUserPage(),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 15),
 
-              // ===== TITLE =====
-              const Text(
-                "Disposisi Surat Masuk\nSurat Keluar",
-                style: TextStyle(fontSize: 18, fontWeight: FontWeight.w700),
+              Padding(
+                padding: const EdgeInsets.only(left: 15),
+                child: Text(
+                  "Disposisi Surat",
+                  style: TextStyle(
+                    fontSize: size.width * 0.07,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 15),
 
-              // ===== SEARCH BAR =====
+              /// SEARCH BAR
               Container(
-                height: 38,
-                padding: const EdgeInsets.symmetric(horizontal: 12),
+                height: size.height * 0.055,
                 decoration: BoxDecoration(
+                  color: Colors.white,
                   borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.black87),
+                  border: Border.all(color: Colors.grey.shade400),
                 ),
+                padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: const Row(
                   children: [
-                    Icon(Icons.search, size: 18),
-                    SizedBox(width: 6),
+                    Icon(Icons.search, color: Colors.grey, size: 22),
+                    SizedBox(width: 10),
                     Expanded(
                       child: TextField(
                         decoration: InputDecoration(
+                          hintText: "Cari surat...",
                           border: InputBorder.none,
-                          hintText: "",
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
                         ),
                       ),
                     ),
@@ -69,214 +111,194 @@ class _DashboardPageState extends State<DashboardPage> {
                 ),
               ),
 
-              const SizedBox(height: 14),
+              const SizedBox(height: 20),
 
-              // ===== FILTER BUTTONS =====
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  filterChip("semua"),
-                  filterChip("disetujui"),
-                  filterChip("menunggu"),
-                  filterChip("ditolak"),
-                ],
+              /// LIST SURAT MASUK
+              Expanded(
+                child: ListView.builder(
+                  itemCount: suratMasukList.length,
+                  itemBuilder: (context, index) {
+                    final surat = suratMasukList[index];
+                    return suratCard(
+                      tanggal: surat["tanggal"],
+                      no: surat["no"],
+                      asal: surat["asal"],
+                      perihal: surat["perihal"],
+                      tanggalDiterima: surat["tanggalDiterima"],
+                      diteruskan: surat["diteruskan"],
+                    );
+                  },
+                ),
               ),
-
-              const SizedBox(height: 18),
-
-              // ===== CARD SURAT KELUAR =====
-              suratCard(
-                title: "Surat Keluar",
-                date: "Senin, 12 Oktober 2025",
-                icon: "assets/surat_keluar.png",
-                info: ["Kode", "No Surat", "Asal"],
-              ),
-
-              const SizedBox(height: 18),
-
-              // ===== CARD SURAT MASUK =====
-              suratCard(
-                title: "Surat Masuk",
-                date: "Senin, 12 Oktober 2025",
-                icon: "assets/surat_masuk.png",
-                info: ["No Surat", "Asal", "Perihal", "Tgl Diterima"],
-              ),
-
-              const SizedBox(height: 100),
             ],
           ),
         ),
       ),
 
-      // ===== FLOATING ADD BUTTON =====
-      floatingActionButton: Container(
-        height: 64,
-        width: 64,
-        decoration: BoxDecoration(
-          color: const Color(0xFF2BA6B7),
-          shape: BoxShape.circle,
-          boxShadow: [
-            BoxShadow(blurRadius: 6, color: Colors.black.withOpacity(0.2)),
-          ],
-        ),
-        child: const Icon(Icons.add, color: Colors.white, size: 34),
+      bottomNavigationBar: bottomNavBar(),
+    );
+  }
+
+  // ========================= NAVBAR =========================
+
+  Widget bottomNavBar() {
+    return Container(
+      margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
+      height: 70,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(40),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 25,
+            offset: const Offset(0, 6),
+          ),
+        ],
       ),
-
-      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
-
-      // ===== CURVED BOTTOM NAV =====
-      bottomNavigationBar: Container(
-        height: 78,
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: const BorderRadius.vertical(top: Radius.circular(38)),
-          boxShadow: [
-            BoxShadow(
-              blurRadius: 10,
-              color: Colors.black.withOpacity(0.12),
-              offset: const Offset(0, -2),
-            ),
-          ],
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-          children: [
-            navIcon(Icons.home, true),
-            navIcon(Icons.group_outlined, false),
-            const SizedBox(width: 40), // space for FAB
-            navIcon(Icons.insert_drive_file_outlined, false),
-            navIcon(Icons.more_horiz, false),
-          ],
-        ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          navIcon("assets/icons/ic_home.png", 0),
+          navIcon("assets/icons/ic_history.png", 1),
+          navIcon("assets/icons/ic_profile.png", 2),
+        ],
       ),
     );
   }
 
-  // ===== FILTER CHIP WIDGET =====
-  Widget filterChip(String label) {
-    bool active = selectedFilter == label;
+  Widget navIcon(String iconPath, int index) {
+    bool active = selectedIndex == index;
 
     return GestureDetector(
-      onTap: () => setState(() => selectedFilter = label),
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-        decoration: BoxDecoration(
-          color: active ? Colors.grey.shade800 : Colors.grey.shade200,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Text(
-          label,
-          style: TextStyle(
-            fontSize: 11,
-            color: active ? Colors.white : Colors.black87,
-            fontWeight: FontWeight.w600,
-          ),
+      onTap: () {
+        setState(() => selectedIndex = index);
+
+        // pindah halaman
+        if (index == 2) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const ProfilePage()),
+          );
+        }
+      },
+
+      child: AnimatedScale(
+        scale: active ? 1.25 : 1.0,
+        duration: const Duration(milliseconds: 220),
+        child: Image.asset(
+          iconPath,
+          width: 28,
+          color: active
+              ? const Color(0xFF0A6F82)
+              : Colors.grey.withOpacity(0.45),
         ),
       ),
     );
   }
 
-  // ===== SURAT CARD =====
+  // ========================= SURAT CARD =========================
+
   Widget suratCard({
-    required String title,
-    required String date,
-    required String icon,
-    required List<String> info,
+    required String tanggal,
+    required String no,
+    required String asal,
+    required String perihal,
+    required String tanggalDiterima,
+    required String diteruskan,
   }) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 18),
+      padding: const EdgeInsets.all(14),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-        border: Border.all(color: Colors.black87, width: 1),
+        borderRadius: BorderRadius.circular(15),
+        border: Border.all(color: Colors.grey.shade300),
+        color: Colors.white,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.10),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(14),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Title + Icon + Date
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Column(
+        children: [
+          /// HEADER
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  CircleAvatar(
+                    radius: 22,
+                    backgroundColor: const Color(0xFFC1E5F2),
+                    child: Image.asset("assets/icons/ic_inmail.png", width: 22),
+                  ),
+                  const SizedBox(width: 12),
+                  const Text(
+                    "Surat Masuk",
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+              Text(tanggal, style: const TextStyle(fontSize: 12)),
+            ],
+          ),
+
+          const SizedBox(height: 15),
+
+          /// DETAIL
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.grey.shade300),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Row(
-                  children: [
-                    CircleAvatar(
-                      radius: 22,
-                      backgroundColor: const Color(0xFFD3ECF4),
-                      child: Image.asset(icon, height: 26),
-                    ),
-                    const SizedBox(width: 10),
-                    Text(
-                      title,
-                      style: const TextStyle(
-                        fontSize: 15,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Text(date, style: const TextStyle(fontSize: 11)),
+                detailText("No Surat: $no"),
+                detailText("Asal: $asal"),
+                detailText("Perihal: $perihal"),
+                detailText("Tanggal Diterima: $tanggalDiterima"),
+                detailText("Diteruskan ke: $diteruskan"), // ⬅ field baru
               ],
             ),
+          ),
 
-            const SizedBox(height: 10),
+          const SizedBox(height: 15),
 
-            // Details Box
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(12),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Colors.black87),
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: info
-                    .map(
-                      (e) => Padding(
-                        padding: const EdgeInsets.only(bottom: 3),
-                        child: Text(e, style: const TextStyle(fontSize: 12)),
-                      ),
-                    )
-                    .toList(),
-              ),
-            ),
-
-            const SizedBox(height: 10),
-
-            // Button
-            Align(
-              alignment: Alignment.centerRight,
-              child: Container(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 18,
-                  vertical: 6,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xFF4EB5D6),
-                  borderRadius: BorderRadius.circular(18),
-                ),
-                child: const Text(
-                  "Selengkapnya",
-                  style: TextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
+          Align(
+            alignment: Alignment.centerRight,
+            child: SizedBox(
+              width: 115,
+              height: 32,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFF1AA7D0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
                 ),
+                onPressed: () {},
+                child: const Text(
+                  "Selengkapnya",
+                  style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
+                ),
               ),
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  // ===== NAV ICON =====
-  Widget navIcon(IconData icon, bool active) {
-    return Icon(
-      icon,
-      size: 30,
-      color: active ? const Color(0xFF2BA6B7) : Colors.grey,
+  Widget detailText(String text) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 6),
+      child: Text(text, style: const TextStyle(fontSize: 13)),
     );
   }
 }

@@ -63,7 +63,7 @@ class _TUHomePageState extends State<TUHomePage> {
               ),
               const SizedBox(height: 8),
               Text(
-                "Disposisi Surat Masuk\nSurat Keluar",
+                "Disposisi Surat",
                 style: TextStyle(
                   fontSize: size.width * 0.07,
                   fontWeight: FontWeight.bold,

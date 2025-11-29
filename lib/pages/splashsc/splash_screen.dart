@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart'; // <-- TAMBAHKAN INI
 import '../Home/home_page.dart'; // pastikan path ini sesuai
 
 class SplashScreen extends StatefulWidget {
@@ -10,9 +11,19 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  
+  // status bar
   @override
   void initState() {
     super.initState();
+
+    // 🔵 Ubah warna status bar di sini
+    SystemChrome.setSystemUIOverlayStyle(
+      const SystemUiOverlayStyle(
+        statusBarColor: Color(0xFFE3F2FD), // GANTI SESUAI WARNA KAMU MAU
+        statusBarIconBrightness: Brightness.light, // ikon putih
+      ),
+    );
 
     Timer(const Duration(seconds: 3), () {
       if (!mounted) return;
@@ -35,10 +46,7 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              Color(0xFFE3F2FD),
-              Color(0xFF90CAF9), // gradasi yang baru
-            ],
+            colors: [Color(0xFFE3F2FD), Color(0xFF90CAF9)],
           ),
         ),
         child: Column(
@@ -56,7 +64,6 @@ class _SplashScreenState extends State<SplashScreen> {
               },
             ),
             const SizedBox(height: 20),
-
             Text(
               'Simdis',
               style: TextStyle(

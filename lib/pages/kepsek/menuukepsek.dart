@@ -57,7 +57,7 @@ class _KepsekMenuState extends State<KepsekMenu> {
                   left: 15,
                 ), // atur nilai sesuai keinginan
                 child: Text(
-                  "Disposisi Surat Masuk\nSurat Keluar",
+                  "Disposisi Surat",
                   style: TextStyle(
                     fontSize: size.width * 0.07,
                     fontWeight: FontWeight.bold,
