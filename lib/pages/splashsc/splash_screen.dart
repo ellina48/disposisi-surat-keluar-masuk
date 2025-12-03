@@ -11,7 +11,6 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
-  
   // status bar
   @override
   void initState() {
@@ -20,7 +19,7 @@ class _SplashScreenState extends State<SplashScreen> {
     // 🔵 Ubah warna status bar di sini
     SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(
-        statusBarColor: Color(0xFFE3F2FD), // GANTI SESUAI WARNA KAMU MAU
+        statusBarColor: Color(0xFFE3F2FD),
         statusBarIconBrightness: Brightness.light, // ikon putih
       ),
     );

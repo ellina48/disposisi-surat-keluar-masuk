@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'notifotth.dart';
+import '../../models/surat_model.dart';
 import '../profile/profile.dart';
 
 class MenuOther extends StatefulWidget {
@@ -13,22 +14,7 @@ class _MenuOtherState extends State<MenuOther> {
   int selectedIndex = 0;
 
   final List<Map<String, dynamic>> suratMasukList = [
-    {
-      "tanggal": "Senin, 12 Oktober 2025",
-      "no": "SM-214",
-      "asal": "Dinas Pendidikan",
-      "perihal": "Undangan Rapat Koordinasi",
-      "tanggalDiterima": "10 Oktober 2025",
-      "diteruskan": "Wakil Kepala Sekolah",
-    },
-    {
-      "tanggal": "Selasa, 13 Oktober 2025",
-      "no": "SM-295",
-      "asal": "Kemdikbud",
-      "perihal": "Sosialisasi Kurikulum Baru",
-      "tanggalDiterima": "11 Oktober 2025",
-      "diteruskan": "Kepala TU",
-    },
+
   ];
 
   @override
@@ -139,7 +125,7 @@ class _MenuOtherState extends State<MenuOther> {
     );
   }
 
-  // ========================= NAVBAR =========================
+  //  NAVBAR
 
   Widget bottomNavBar() {
     return Container(

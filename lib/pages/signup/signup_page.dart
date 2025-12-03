@@ -1,8 +1,8 @@
-import 'dart:ui';
+import 'dart:ui'; 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ta_mobile_disposisi_surat/pages/Home/home_page.dart';
-import '../signin/signin_page.dart'; // import halaman SignIn
+import '../Home/home_page.dart';
+import '../signin/signin_page.dart'; 
 
 class SignUp extends StatefulWidget {
   const SignUp({super.key});
@@ -14,9 +14,9 @@ class SignUp extends StatefulWidget {
 class _SignUpPageState extends State<SignUp> {
   bool _obscurePass = true;
   bool _obscureConfirmPass = true;
-  String? selectedRole; // untuk menyimpan dropdown
+  String? selectedRole; 
 
-  @override
+  @override //menambahkan metode
   void initState() {
     super.initState();
     SystemChrome.setSystemUIOverlayStyle(
@@ -34,18 +34,18 @@ class _SignUpPageState extends State<SignUp> {
     final width = size.width;
 
     return WillPopScope(
-      onWillPop: () async {
-        Navigator.pushReplacement(
+      onWillPop: () async { 
+        Navigator.pushReplacement( 
           context,
           MaterialPageRoute(builder: (_) => const WelcomePage()),
         );
         return false;
       },
-      child: Scaffold(
+      child: Scaffold( //dasar halaman
         body: SizedBox(
           width: width,
           height: height,
-          child: Container(
+          child: Container( 
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topCenter,
@@ -53,7 +53,7 @@ class _SignUpPageState extends State<SignUp> {
                 colors: [Color(0xFFE3F2FD), Color(0xFF90CAF9)],
               ),
             ),
-            child: SafeArea(
+            child: SafeArea( 
               child: SingleChildScrollView(
                 child: Column(
                   children: [

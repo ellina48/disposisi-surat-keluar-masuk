@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'dart:math'; //fungsi mtk min
 
 class KepsekMenu extends StatefulWidget {
   const KepsekMenu({super.key});
@@ -37,7 +38,7 @@ class _KepsekMenuState extends State<KepsekMenu> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              /// HEADER LOGO + NOTIF
+              /// HEADER
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -49,23 +50,21 @@ class _KepsekMenuState extends State<KepsekMenu> {
                 ],
               ),
 
-              const SizedBox(height: 15),
+              SizedBox(height: size.height * 0.018),
 
-              // ← posisi teks diatur di sini
+              /// TITLE
               Padding(
-                padding: const EdgeInsets.only(
-                  left: 15,
-                ), // atur nilai sesuai keinginan
+                padding: const EdgeInsets.only(left: 15),
                 child: Text(
                   "Disposisi Surat",
                   style: TextStyle(
-                    fontSize: size.width * 0.07,
+                    fontSize: min(size.width * 0.07, 26),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
               ),
 
-              const SizedBox(height: 15),
+              SizedBox(height: size.height * 0.02),
 
               /// SEARCH BAR
               Container(
@@ -81,18 +80,12 @@ class _KepsekMenuState extends State<KepsekMenu> {
                     Icon(Icons.search, color: Colors.grey, size: 22),
                     SizedBox(width: 10),
                     Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: const InputDecoration(
-                            hintText: "Cari surat...",
-                            border: InputBorder.none,
-                            isDense:
-                                true, // <- ini penting agar tinggi InputDecoration pas
-                            contentPadding:
-                                EdgeInsets.zero, // <- hapus padding default
-                          ),
+                      child: TextField(
+                        decoration: InputDecoration(
+                          hintText: "Cari surat...",
+                          border: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.zero,
                         ),
                       ),
                     ),
@@ -100,21 +93,24 @@ class _KepsekMenuState extends State<KepsekMenu> {
                 ),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: size.height * 0.012),
 
-              /// FILTER SURAT BUTTONS
-              Row(
-                children: [
-                  filterButton("Semua"),
-                  const SizedBox(width: 25),
-                  filterButton("Surat Keluar"),
-                  const SizedBox(width: 25),
-                  filterButton("Surat Masuk"),
-                  const SizedBox(width: 25),
-                ],
+              /// filter button
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    filterButton("Semua"),
+                    SizedBox(width: size.width * 0.03),
+                    filterButton("Surat Keluar"),
+                    SizedBox(width: size.width * 0.03),
+                    filterButton("Surat Masuk"),
+                    SizedBox(width: size.width * 0.03),
+                  ],
+                ),
               ),
 
-              const SizedBox(height: 17),
+              SizedBox(height: size.height * 0.02),
 
               /// LIST SURAT
               Expanded(
@@ -133,13 +129,11 @@ class _KepsekMenuState extends State<KepsekMenu> {
         ),
       ),
 
-      /// NEW NAVBAR STYLE
       bottomNavigationBar: bottomNavBar(),
     );
   }
 
-  // ====================== NEW SOFT UI BOTTOM NAVBAR ======================
-
+  /// BOTTOM NAVBAR
   Widget bottomNavBar() {
     return Container(
       margin: const EdgeInsets.only(bottom: 10, left: 15, right: 15),
@@ -174,8 +168,10 @@ class _KepsekMenuState extends State<KepsekMenu> {
       onTap: () => setState(() => selectedIndex = index),
       child: AnimatedScale(
         scale: active ? 1.25 : 1.0,
+        //animasi 
         duration: const Duration(milliseconds: 220),
         curve: Curves.easeOut,
+        
         child: Image.asset(
           iconPath,
           width: 28,
@@ -187,15 +183,18 @@ class _KepsekMenuState extends State<KepsekMenu> {
     );
   }
 
-  // ====================== FILTER BUTTON ======================
-
+  /// filte BUTTON
   Widget filterButton(String title) {
+    final width = MediaQuery.of(context).size.width;
     bool active = title == selectedFilter;
 
     return GestureDetector(
       onTap: () => setState(() => selectedFilter = title),
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+        padding: EdgeInsets.symmetric(
+          horizontal: width * 0.04,
+          vertical: 6,
+        ),
         decoration: BoxDecoration(
           color: active ? const Color(0xFF187DA3) : Colors.white,
           borderRadius: BorderRadius.circular(18),
@@ -204,7 +203,7 @@ class _KepsekMenuState extends State<KepsekMenu> {
         child: Text(
           title,
           style: TextStyle(
-            fontSize: 13,
+            fontSize: min(width * 0.032, 14),
             color: active ? Colors.white : const Color(0xFF187DA3),
             fontWeight: FontWeight.bold,
           ),
@@ -213,8 +212,7 @@ class _KepsekMenuState extends State<KepsekMenu> {
     );
   }
 
-  // ====================== SURAT CARD ======================
-
+  /// SURAT CARD
   Widget suratCard({required String tanggal, required String jenis}) {
     return Container(
       margin: const EdgeInsets.only(bottom: 18),
@@ -232,8 +230,8 @@ class _KepsekMenuState extends State<KepsekMenu> {
         ],
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          /// TITLE + ICON
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -260,15 +258,22 @@ class _KepsekMenuState extends State<KepsekMenu> {
                 ],
               ),
 
-              Text(tanggal, style: const TextStyle(fontSize: 12)),
+              Flexible( //responsive 
+                child: Text(
+                  tanggal,
+                  style: const TextStyle(fontSize: 12),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
             ],
           ),
 
           const SizedBox(height: 15),
+
           detailBox(jenis),
+
           const SizedBox(height: 15),
 
-          /// BUTTON SELENGKAPNYA
           Align(
             alignment: Alignment.centerRight,
             child: SizedBox(

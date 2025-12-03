@@ -8,8 +8,8 @@ class TUHomePage extends StatefulWidget {
 }
 
 class _TUHomePageState extends State<TUHomePage> {
-  String selectedFilter = "semua";
-  int selectedIndex = 0;
+  String selectedFilter = "semua"; 
+  int selectedIndex = 0; 
 
   final List<Map<String, String>> suratList = [
     {
@@ -31,7 +31,9 @@ class _TUHomePageState extends State<TUHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery.of(context).size; 
+
+    // filter surat
     List<Map<String, String>> filtered = selectedFilter == "semua"
         ? suratList
         : suratList.where((e) => e["status"] == selectedFilter).toList();
@@ -39,29 +41,33 @@ class _TUHomePageState extends State<TUHomePage> {
     return Scaffold(
       extendBody: true,
       backgroundColor: Colors.white,
+
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 18),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
+
               const SizedBox(height: 8),
-              // HEADER
+
+              // logo dan notif
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Image.asset(
                     'assets/images/logosmk.jpg',
-                    width: size.width * 0.12,
+                    width: size.width * 0.12, 
                   ),
                   const Icon(
                     Icons.notifications_none,
                     size: 26,
-                    color: Colors.black,
                   ),
                 ],
               ),
-              const SizedBox(height: 8),
+
+              const SizedBox(height: 8), //atur spasi
+
               Text(
                 "Disposisi Surat",
                 style: TextStyle(
@@ -69,8 +75,10 @@ class _TUHomePageState extends State<TUHomePage> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+
               const SizedBox(height: 12),
-              // SEARCH BAR
+
+              // search bar
               Container(
                 height: 44,
                 decoration: BoxDecoration(
@@ -82,25 +90,24 @@ class _TUHomePageState extends State<TUHomePage> {
                     const SizedBox(width: 12),
                     const Icon(Icons.search),
                     const SizedBox(width: 10),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: TextField(
-                          textAlignVertical: TextAlignVertical.center,
-                          decoration: const InputDecoration(
-                            hintText: "Cari surat...",
-                            border: InputBorder.none,
-                            isDense: true,
-                            contentPadding: EdgeInsets.zero,
-                          ),
+
+                    // textfield cari
+                    Expanded( //mengisi ruang kosong
+                      child: TextField(
+                        decoration: const InputDecoration(
+                          hintText: "Cari surat...",
+                          border: InputBorder.none,
+                          isDense: true, //text slim
                         ),
                       ),
                     ),
                   ],
                 ),
               ),
+
               const SizedBox(height: 12),
-              // FILTER
+
+              // =filter status
               Row(
                 children: [
                   filterChip("semua"),
@@ -112,8 +119,10 @@ class _TUHomePageState extends State<TUHomePage> {
                   filterChip("ditolak"),
                 ],
               ),
+
               const SizedBox(height: 18),
-              // LIST CARD SURAT
+
+              // list surat
               Expanded(
                 child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
@@ -131,14 +140,17 @@ class _TUHomePageState extends State<TUHomePage> {
           ),
         ),
       ),
-      bottomNavigationBar: bottomNavBar(),
+
+      bottomNavigationBar: bottomNavBar(), // navbar custom
     );
   }
 
+  // filter
   Widget filterChip(String text) {
-    bool active = text == selectedFilter;
+    bool active = text == selectedFilter; // cek aktif atau tidak
+
     return GestureDetector(
-      onTap: () => setState(() => selectedFilter = text),
+      onTap: () => setState(() => selectedFilter = text), // ubah filter
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 7),
         decoration: BoxDecoration(
@@ -156,17 +168,17 @@ class _TUHomePageState extends State<TUHomePage> {
       ),
     );
   }
-
   Widget suratCard({
-    required String jenis,
+    required String jenis, //wajib diisi
     required String tanggal,
     required String status,
   }) {
+
     Color statusColor = status == "disetujui"
         ? const Color(0xFFB8DBC0)
         : status == "ditolak"
-        ? const Color(0xFFE7B3B7)
-        : const Color(0xFFE7DCA0);
+            ? const Color(0xFFE7B3B7)
+            : const Color(0xFFE7DCA0);
 
     IconData icon = jenis == "Surat Masuk" ? Icons.inbox : Icons.send;
 
@@ -176,7 +188,6 @@ class _TUHomePageState extends State<TUHomePage> {
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.grey.shade300),
-        color: Colors.white,
         boxShadow: [
           BoxShadow(
             color: Colors.black.withOpacity(0.10),
@@ -185,13 +196,17 @@ class _TUHomePageState extends State<TUHomePage> {
           ),
         ],
       ),
+
+      // isi kartu
       child: Column(
         children: [
-          // TITLE + ICON + STATUS
+
+          // header kartu
           Row(
             children: [
               Icon(icon, size: 42, color: statusColor),
               const SizedBox(width: 12),
+
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -204,11 +219,9 @@ class _TUHomePageState extends State<TUHomePage> {
                       ),
                     ),
                     const SizedBox(height: 4),
+
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 3,
-                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                       decoration: BoxDecoration(
                         color: statusColor,
                         borderRadius: BorderRadius.circular(6),
@@ -218,16 +231,21 @@ class _TUHomePageState extends State<TUHomePage> {
                   ],
                 ),
               ),
+
+              // tanggal
               Text(tanggal, style: const TextStyle(fontSize: 12)),
             ],
           ),
+
           const SizedBox(height: 16),
-          // DETAIL SURAT + BUTTONS
+
+          // detail kartu
           Row(
             children: [
               Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
+
                   children: jenis == "Surat Masuk"
                       ? [
                           detailRow("No Surat"),
@@ -242,6 +260,8 @@ class _TUHomePageState extends State<TUHomePage> {
                         ],
                 ),
               ),
+
+              // tombol hapus + arrow
               Column(
                 children: [
                   SizedBox(
@@ -253,22 +273,17 @@ class _TUHomePageState extends State<TUHomePage> {
                           borderRadius: BorderRadius.circular(10),
                         ),
                       ),
-                      onPressed: () {},
-                      child: const Text(
-                        "Hapus",
-                        style: TextStyle(fontSize: 12),
-                      ),
+                      onPressed: () {}, // aksi hapus
+                      child: const Text("Hapus", style: TextStyle(fontSize: 12)),
                     ),
                   ),
                   const SizedBox(height: 12),
+
+                  // tombol detail
                   const CircleAvatar(
                     radius: 16,
                     backgroundColor: Color(0xFF1AA7D0),
-                    child: Icon(
-                      Icons.arrow_forward_ios,
-                      size: 15,
-                      color: Colors.white,
-                    ),
+                    child: Icon(Icons.arrow_forward_ios, size: 15, color: Colors.white),
                   ),
                 ],
               ),
@@ -279,19 +294,21 @@ class _TUHomePageState extends State<TUHomePage> {
     );
   }
 
+  // text baris detail
   Widget detailRow(String t) => Padding(
-    padding: const EdgeInsets.only(bottom: 4),
-    child: Text(t, style: const TextStyle(fontSize: 13)),
-  );
+        padding: const EdgeInsets.only(bottom: 4),
+        child: Text(t, style: const TextStyle(fontSize: 13)),
+      );
 
-  // NAVBAR BERSIH + TOMBOL + MELAYANG
+  // navbar bawah
   Widget bottomNavBar() {
     return SizedBox(
       height: 110,
-      child: Stack(
+      child: Stack( //menumpuk widget
         clipBehavior: Clip.none,
         children: [
-          // --- BACKGROUND PILL ---
+
+          // background navbar
           Positioned(
             bottom: 15,
             left: 30,
@@ -309,13 +326,15 @@ class _TUHomePageState extends State<TUHomePage> {
                   ),
                 ],
               ),
+
+              // icon navbar
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
                   navIcon(Icons.home, 0),
                   navIcon(Icons.person_outline, 1),
 
-                  const SizedBox(width: 55), // ruang tombol +
+                  const SizedBox(width: 55), // untuk tombol tengah
 
                   navIcon(Icons.calendar_month_outlined, 3),
                   navIcon(Icons.person, 4),
@@ -324,14 +343,14 @@ class _TUHomePageState extends State<TUHomePage> {
             ),
           ),
 
-          // --- TOMBOL + BULAT MENGAMBANG ---
+          // tombol mengambang
           Positioned(
             top: -5,
             left: 0,
             right: 0,
             child: Center(
               child: GestureDetector(
-                onTap: () {},
+                onTap: () {}, // aksi tambah
                 child: Container(
                   height: 70,
                   width: 70,
@@ -356,10 +375,12 @@ class _TUHomePageState extends State<TUHomePage> {
     );
   }
 
+  // icon navbar highlight
   Widget navIcon(IconData icon, int index) {
     bool active = selectedIndex == index;
+
     return GestureDetector(
-      onTap: () => setState(() => selectedIndex = index),
+      onTap: () => setState(() => selectedIndex = index), // ubah index
       child: Icon(
         icon,
         size: 26,
